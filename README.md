@@ -1,16 +1,48 @@
-# shopping_app
+#  Shopping App
 
-A new Flutter project.
+A simple Flutter shopping app where you can browse products and add them to your cart.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- User login
+- View products (from Fake Store API)
+- Add to cart
+- Remove from cart
+- Checkout
 
-A few resources to get you started if this is your first Flutter project:
+## MVVM Architecture
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+This app uses **MVVM** pattern with 3 parts:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Model** - Your data (Product class)
+
+**View** - Your screens (ProductScreen, CartScreen)
+
+**ViewModel** - Manages data and logic (ShoppingCart Provider)
+
+### How it works:
+```
+User clicks button → View → ViewModel updates data → View shows changes
+```
+
+## Project Structure
+
+```
+lib/
+├── models/          # Data classes
+├── viewmodels/      # State management
+└── views/           # UI screens
+```
+
+## Run the App
+
+```bash
+flutter pub get
+flutter run
+```
+
+## Technologies
+
+- Flutter
+- Provider (state management)
+- Fake Store API (products & authentication)

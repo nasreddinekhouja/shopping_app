@@ -3,6 +3,9 @@ import 'package:shopping_app/models/products_model.dart';
 import 'package:shopping_app/services/product_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopping_app/views/productdetails.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_app/viewmodels/shoppingcartProvider.dart';
+import 'package:shopping_app/views/shoppingcart.dart';
 
 class Productscreen extends StatefulWidget {
   const Productscreen({super.key, required List products});
@@ -71,41 +74,108 @@ class _ProductscreenState extends State<Productscreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: TextField(
-              controller: _searchController,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'Search products...',
-                // ignore: deprecated_member_use
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-                prefixIcon: const Icon(Icons.search, color: Colors.white),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.white),
-                        onPressed: () {
-                          _searchController.clear();
-                          _filterProductsList();
-                        },
-                      )
-                    : null,
-                filled: true,
-                // ignore: deprecated_member_use
-                fillColor: Colors.white.withOpacity(0.2),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Search products...',
+                      // ignore: deprecated_member_use
+                      hintStyle:
+                          // ignore: deprecated_member_use
+                          TextStyle(color: Colors.white.withOpacity(0.7)),
+                      prefixIcon: const Icon(Icons.search, color: Colors.white),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon:
+                                  const Icon(Icons.clear, color: Colors.white),
+                              onPressed: () {
+                                _searchController.clear();
+                                _filterProductsList();
+                              },
+                            )
+                          : null,
+                      filled: true,
+                      // ignore: deprecated_member_use
+                      fillColor: Colors.white.withOpacity(0.2),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        // ignore: deprecated_member_use
+                        borderSide:
+                            // ignore: deprecated_member_use
+                            BorderSide(color: Colors.white.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide:
+                            const BorderSide(color: Colors.white, width: 2),
+                      ),
+                    ),
+                    onChanged: (value) => _filterProductsList(),
+                  ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  // ignore: deprecated_member_use
-                  borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                const SizedBox(width: 12),
+                Consumer<ShoppingCart>(
+                  builder: (context, cart, child) {
+                    return Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            // ignore: deprecated_member_use
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.shopping_cart,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ShoppingcartScreen()));
+                            },
+                          ),
+                        ),
+                        if (cart.itemCount > 0)
+                          Positioned(
+                            right: 6,
+                            top: 6,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 18,
+                                minHeight: 18,
+                              ),
+                              child: Text(
+                                cart.itemCount.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: Colors.white, width: 2),
-                ),
-              ),
-              onChanged: (value) => _filterProductsList(),
+              ],
             ),
           ),
           Expanded(
